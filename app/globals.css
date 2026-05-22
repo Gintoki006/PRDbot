@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gh-bg: #0d1117;
+  --color-gh-header: #161b22;
+  --color-gh-border: #30363d;
+  --color-gh-blue: #58a6ff;
+  --color-gh-green: #238636;
+  --color-gh-green-hover: #2ea043;
+  --color-gh-text-main: #c9d1d9;
+  --color-gh-text-secondary: #8b949e;
+  --color-gh-card-bg: #0d1117;
+  --color-gh-fade: #161b22;
+  --color-primary: #58a6ff;
+  --color-on-surface: #c9d1d9;
+  --color-background: #0d1117;
+  --color-surface-variant: #21262d;
+  --color-outline: #30363d;
+
+  --radius-default: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-full: 9999px;
+
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 20px;
+  --spacing-margin-desktop: 64px;
+  --spacing-container-max: 1280px;
+  --spacing-unit: 4px;
+  
+  --font-display-hero: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Helvetica", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-body-md: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Helvetica", Arial, sans-serif;
+  --font-headline-md: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Helvetica", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.gh-btn-primary {
+  background-color: #238636;
+  color: #ffffff;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+  transition: background-color 0.2s;
+}
+.gh-btn-primary:hover {
+  background-color: #2ea043;
+}
+
+.gh-btn-secondary {
+  background-color: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.gh-btn-secondary:hover {
+  background-color: #30363d;
+  border-color: #8b949e;
+}
+
+.gh-card {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+}
+
+.gh-header-gradient {
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+}
+
+.issue-label {
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  border-radius: 2em;
+  border: 1px solid transparent;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-20px) translateX(-50%);
+  }
+}
+
+@keyframes float-simple {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.split-bg-image {
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBzI6LbgRY8c8tz7NH7sfEUP98GCWV-WfiMxi-KnacVZJkUgtZLCrI5ivRDYcw39vuOzsj2nF4wJBxfyf9U_O0x95xzVM1T2UlyowV3yJ5kEqOX6ubsMRjpryzJF7hymzOh1fESgNDIun_aLRAfSh0Jte0whigJ0GXjEt9bXjBTzqLujrOqX5vzw01yXm-QoNAgqKNaHXzNkJ6ikWjdY52lL3syCMTMM0vIvxZvetX9jiLBYbcARUxcwJeS8XGjc7P_Mq85ArBa2LM);
+  background-size: cover;
+  background-position: center;
+}
