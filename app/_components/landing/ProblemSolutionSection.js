@@ -73,15 +73,14 @@ export default function ProblemSolutionSection() {
                className="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-8 relative"
              >
                {/* Label pill in the center on desktop, top on mobile */}
-               <div className="md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 z-20 flex justify-center mb-2 md:mb-0">
-                  <span className="bg-[#0d1117] border border-[#30363d] text-white text-[11px] font-extrabold uppercase tracking-[0.2em] px-5 py-2 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+               <div className="md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 z-20 flex justify-center mb-4 md:mb-0">
+                  <div className="bg-[#0d1117] border border-[#30363d] text-white text-[11px] font-extrabold uppercase tracking-[0.2em] px-4 py-2 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] text-center max-w-[140px] leading-relaxed break-words flex items-center justify-center">
                     {item.title}
-                  </span>
+                  </div>
                </div>
                
                {/* Before (Without PRDbot) */}
-               <GlowCard glowColor="red" customSize={true} className="w-full h-full p-8 md:pr-16 group transition-colors relative overflow-hidden">
-                  <div className="absolute inset-0 bg-red-950/10 pointer-events-none rounded-3xl"></div>
+               <GlowCard glowColor="red" customSize={true} className="w-full h-full p-8 md:pr-20 group transition-colors relative overflow-hidden">
                   <div className="md:hidden flex items-center gap-2 text-red-400 font-bold text-sm mb-4">
                     <span className="material-symbols-outlined text-base">warning</span> 
                     Without PRDbot
@@ -91,8 +90,7 @@ export default function ProblemSolutionSection() {
                </GlowCard>
                
                {/* After (With PRDbot) */}
-               <GlowCard glowColor="green" customSize={true} className="w-full h-full p-8 md:pl-16 group transition-colors relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[#238636]/10 pointer-events-none rounded-3xl"></div>
+               <GlowCard glowColor="green" customSize={true} className="w-full h-full p-8 md:pl-20 group transition-colors relative overflow-hidden">
                   <div className="md:hidden flex items-center gap-2 text-[#238636] font-bold text-sm mb-4">
                     <span className="material-symbols-outlined text-base">check_circle</span> 
                     With PRDbot

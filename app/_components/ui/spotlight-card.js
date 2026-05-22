@@ -6,7 +6,8 @@ const glowColorMap = {
   blue: { base: 212, spread: 20 }, // #58a6ff (GitHub blue)
   purple: { base: 268, spread: 20 }, // #bf87ff (Purple)
   green: { base: 140, spread: 20 }, // #238636 (GitHub green)
-  orange: { base: 24, spread: 20 }
+  orange: { base: 24, spread: 20 },
+  red: { base: 3, spread: 20 } // #f85149 (GitHub red)
 };
 
 const sizeMap = {
