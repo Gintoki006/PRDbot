@@ -77,9 +77,13 @@ export async function POST(req) {
     }
 
     const ruleCount = countRules(prdText);
-    const prdMeta = await extractPrdMeta(prdText);
-    
-    console.log("[PRD_META]", prdMeta);
+    let prdMeta = {};
+    try {
+      prdMeta = await extractPrdMeta(prdText);
+      console.log("[PRD_META]", prdMeta);
+    } catch (metaError) {
+      console.error("[PRD_META_ERROR] Failed to extract PRD meta, saving empty meta.", metaError);
+    }
 
     // Upsert the PRD
     const prd = await prisma.prd.upsert({

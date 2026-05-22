@@ -15,6 +15,12 @@ const STATUS_STYLES = {
     text: "text-red-400",
     label: "Violated",
   },
+  warning: {
+    bg: "bg-yellow-500/10",
+    border: "border-yellow-500/30",
+    text: "text-yellow-400",
+    label: "Warning",
+  },
   flagged: {
     bg: "bg-yellow-500/10",
     border: "border-yellow-500/30",
@@ -28,6 +34,28 @@ const STATUS_STYLES = {
     label: "Error",
   },
 };
+
+function ScoreBadge({ score }) {
+  if (score === null || score === undefined) return <span className="text-gh-text-secondary">—</span>;
+  
+  let color = "text-green-400 border-green-500/30 bg-green-500/10";
+  if (score < 60) color = "text-red-400 border-red-500/30 bg-red-500/10";
+  else if (score < 90) color = "text-yellow-400 border-yellow-500/30 bg-yellow-500/10";
+
+  return (
+    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium border ${color}`}>
+      {score}/100
+    </span>
+  );
+}
+
+function RulesBadge({ rulesString }) {
+  const count = rulesString ? rulesString.split('\n').filter(Boolean).length : 0;
+  if (count === 0) {
+    return <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium border text-green-400 border-green-500/30 bg-green-500/10">0</span>;
+  }
+  return <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium border text-red-400 border-red-500/30 bg-red-500/10">{count}</span>;
+}
 
 export default function HistoryTable({ repoFullName }) {
   const [actions, setActions] = useState([]);
@@ -67,6 +95,17 @@ export default function HistoryTable({ repoFullName }) {
   useEffect(() => {
     setPage(1);
   }, [statusFilter, repoFullName]);
+
+  const parseJsonSafe = (jsonStr, fallback = []) => {
+    if (!jsonStr) return fallback;
+    if (typeof jsonStr !== 'string') return Array.isArray(jsonStr) ? jsonStr : fallback;
+    try {
+      const parsed = JSON.parse(jsonStr);
+      return Array.isArray(parsed) ? parsed : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -116,13 +155,16 @@ export default function HistoryTable({ repoFullName }) {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden md:table-cell">
-                  Tool
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden md:table-cell">
-                  Confidence
+                <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden lg:table-cell">
+                  Drift
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden lg:table-cell">
+                  Alignment
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden lg:table-cell">
+                  Rules
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gh-text-secondary uppercase tracking-wider hidden md:table-cell">
                   Timestamp
                 </th>
               </tr>
@@ -134,7 +176,7 @@ export default function HistoryTable({ repoFullName }) {
 
                 return (
                   <tr key={action.id} className="group">
-                    <td colSpan={5} className="p-0">
+                    <td colSpan={6} className="p-0">
                       <button
                         onClick={() =>
                           setExpandedRow(isExpanded ? null : action.id)
@@ -159,57 +201,154 @@ export default function HistoryTable({ repoFullName }) {
                               )}
                             </div>
                           </div>
-                          <div className="px-4 py-3 flex-none">
+                          <div className="px-4 py-3 w-32 flex-none">
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${style.bg} ${style.border} ${style.text}`}
                             >
                               {style.label}
                             </span>
                           </div>
-                          <div className="px-4 py-3 flex-none hidden md:block text-gh-text-secondary">
-                            {action.toolCalled !== "none"
-                              ? action.toolCalled
-                              : "—"}
+                          <div className="px-4 py-3 w-24 flex-none hidden lg:block">
+                            <ScoreBadge score={action.driftScore} />
                           </div>
-                          <div className="px-4 py-3 flex-none hidden md:block text-gh-text-secondary">
-                            {action.confidence > 0
-                              ? `${action.confidence}%`
-                              : "—"}
+                          <div className="px-4 py-3 w-24 flex-none hidden lg:block">
+                            <ScoreBadge score={action.alignmentScore} />
                           </div>
-                          <div className="px-4 py-3 flex-none hidden lg:block text-gh-text-secondary text-xs">
+                          <div className="px-4 py-3 w-20 flex-none hidden lg:block">
+                            <RulesBadge rulesString={action.ruleQuoted} />
+                          </div>
+                          <div className="px-4 py-3 w-40 flex-none hidden md:block text-gh-text-secondary text-xs">
                             {new Date(action.createdAt).toLocaleString()}
                           </div>
                         </div>
                       </button>
 
                       {isExpanded && (
-                        <div className="px-4 pb-4 pt-1 bg-surface-variant/30 border-t border-gh-border space-y-3">
-                          {action.ruleQuoted && (
-                            <div>
-                              <p className="text-xs font-medium text-gh-text-secondary uppercase tracking-wider mb-1">
-                                Rule Quoted
+                        <div className="px-6 pb-6 pt-2 bg-surface-variant/30 border-t border-gh-border space-y-6">
+                          
+                          {/* Drift Detection Section */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="col-span-1 md:col-span-1 bg-gh-card-bg border border-gh-border p-4 rounded-xl">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+                                  <span className="material-symbols-outlined text-cyan-400 text-[18px]">explore</span>
+                                  Drift Assessment
+                                </h4>
+                                <span className={`text-xs px-2 py-0.5 rounded uppercase tracking-wider font-medium ${STATUS_STYLES[action.driftStatus || 'compliant']?.bg} ${STATUS_STYLES[action.driftStatus || 'compliant']?.text}`}>
+                                  {action.driftStatus || 'compliant'}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gh-text-secondary mb-2">
+                                <strong className="text-gh-text-main">Score:</strong> {action.driftScore || 0}/100
                               </p>
-                              <blockquote className="border-l-2 border-gh-blue pl-3 text-sm text-gh-text-main italic">
-                                {action.ruleQuoted}
-                              </blockquote>
+                              {action.driftStatus !== 'compliant' && action.driftType !== 'none' && (
+                                <p className="text-xs text-gh-text-secondary mb-2">
+                                  <strong className="text-gh-text-main">Type:</strong> {action.driftType}
+                                </p>
+                              )}
+                              <p className="text-sm text-gh-text-main leading-relaxed">
+                                {action.driftReason || 'No significant drift detected.'}
+                              </p>
+                              {action.driftSuggestedAlt && (
+                                <div className="mt-3 bg-cyan-500/10 border border-cyan-500/20 p-2 rounded text-xs text-cyan-300">
+                                  <strong>Alternative:</strong> {action.driftSuggestedAlt}
+                                </div>
+                              )}
                             </div>
-                          )}
-                          {action.result && (
-                            <div>
-                              <p className="text-xs font-medium text-gh-text-secondary uppercase tracking-wider mb-1">
-                                Result
+
+                            {/* AI Issue Review Section */}
+                            <div className="col-span-1 md:col-span-1 bg-gh-card-bg border border-gh-border p-4 rounded-xl">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+                                  <span className="material-symbols-outlined text-indigo-400 text-[18px]">assignment</span>
+                                  Quality Review
+                                </h4>
+                                <span className={`text-xs px-2 py-0.5 rounded uppercase tracking-wider font-medium ${STATUS_STYLES[action.aiReviewStatus || 'compliant']?.bg} ${STATUS_STYLES[action.aiReviewStatus || 'compliant']?.text}`}>
+                                  {action.aiReviewStatus || 'compliant'}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gh-text-secondary mb-3">
+                                <strong className="text-gh-text-main">Alignment:</strong> {action.alignmentScore || 0}/100
                               </p>
-                              <p className="text-sm text-gh-text-main whitespace-pre-wrap">
-                                {action.result}
-                              </p>
+                              
+                              {parseJsonSafe(action.aiFindings).length > 0 && (
+                                <div className="mb-3">
+                                  <strong className="text-xs text-gh-text-main block mb-1">Findings:</strong>
+                                  <ul className="list-disc pl-4 text-xs text-gh-text-secondary space-y-1">
+                                    {parseJsonSafe(action.aiFindings).map((finding, idx) => (
+                                      <li key={idx}>{finding}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {parseJsonSafe(action.aiMissing).length > 0 && (
+                                <div>
+                                  <strong className="text-xs text-gh-text-main block mb-1">Missing Info:</strong>
+                                  <ul className="list-disc pl-4 text-xs text-gh-text-secondary space-y-1">
+                                    {parseJsonSafe(action.aiMissing).map((missing, idx) => (
+                                      <li key={idx}>{missing}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
                             </div>
-                          )}
-                          <div className="flex gap-4 text-xs text-gh-text-secondary">
-                            <span>
+
+                            {/* Rule Enforcement Section */}
+                            <div className="col-span-1 md:col-span-1 bg-gh-card-bg border border-gh-border p-4 rounded-xl">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+                                  <span className="material-symbols-outlined text-emerald-400 text-[18px]">fact_check</span>
+                                  Rule Enforcement
+                                </h4>
+                                <span className={`text-xs px-2 py-0.5 rounded uppercase tracking-wider font-medium ${STATUS_STYLES[action.ruleEnforcementStatus || 'compliant']?.bg} ${STATUS_STYLES[action.ruleEnforcementStatus || 'compliant']?.text}`}>
+                                  {action.ruleEnforcementStatus || 'compliant'}
+                                </span>
+                              </div>
+                              
+                              {action.ruleQuoted ? (
+                                <div className="mb-3">
+                                  <strong className="text-xs text-gh-text-main block mb-1">Rules Violated:</strong>
+                                  <div className="space-y-2">
+                                    {action.ruleQuoted.split('\n').filter(Boolean).map((rule, idx) => (
+                                      <blockquote key={idx} className="border-l-2 border-emerald-500 pl-2 text-xs text-gh-text-secondary italic">
+                                        {rule}
+                                      </blockquote>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-sm text-gh-text-main leading-relaxed">
+                                  All PRD rules satisfied.
+                                </p>
+                              )}
+
+                              {action.suggestedRewrite && (
+                                <div className="mt-3">
+                                  <strong className="text-xs text-gh-text-main block mb-1">Suggested Rewrite:</strong>
+                                  <div className="bg-surface-variant p-2 rounded text-xs text-gh-text-secondary whitespace-pre-wrap">
+                                    {action.suggestedRewrite}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4 text-xs text-gh-text-secondary border-t border-gh-border pt-3">
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">bolt</span>
                               Iterations: {action.iterationCount}
                             </span>
-                            <span>Repo: {action.repoFullName}</span>
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">folder</span>
+                              Repo: {action.repoFullName}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">chat</span>
+                              Action Taken: {action.toolCalled || 'None'}
+                            </span>
                           </div>
+
                         </div>
                       )}
                     </td>

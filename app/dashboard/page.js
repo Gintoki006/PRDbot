@@ -6,6 +6,7 @@ import RepoCard from "./_components/RepoCard";
 import PrdUploadModal from "./_components/PrdUploadModal";
 import SimulatePanel from "./_components/SimulatePanel";
 import AgentLogPanel from "./_components/AgentLogPanel";
+import AgentCardGrid from "./_components/AgentCardGrid";
 
 import { motion } from "framer-motion";
 
@@ -22,6 +23,7 @@ const itemVariants = {
 export default function DashboardPage() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [latestAction, setLatestAction] = useState(null);
   
   // Modals state
   const [isAddRepoOpen, setIsAddRepoOpen] = useState(false);
@@ -53,9 +55,24 @@ export default function DashboardPage() {
     }
   }, []);
 
+  const fetchLatestAction = useCallback(async () => {
+    try {
+      const res = await fetch("/api/history?limit=1");
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setLatestAction(data[0]);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
   useEffect(() => {
     fetchRepos();
-  }, [fetchRepos]);
+    fetchLatestAction();
+  }, [fetchRepos, fetchLatestAction]);
 
   return (
     <motion.div 
@@ -81,7 +98,7 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-8">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
@@ -118,29 +135,54 @@ export default function DashboardPage() {
             </button>
           </motion.div>
         ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {repos.map((repo) => (
-              <motion.div key={repo.id} variants={itemVariants} layout>
-                <RepoCard
-                  repo={repo}
-                  onRemove={fetchRepos}
-                  onUploadPrd={(r) => {
-                    setSelectedRepoForPrd(r);
-                    setIsPrdModalOpen(true);
-                  }}
-                  onSimulate={(r) => {
-                    setSelectedRepoForSim(r);
-                    setIsSimulateOpen(true);
-                  }}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
+          <>
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12"
+            >
+              {repos.map((repo) => (
+                <motion.div key={repo.id} variants={itemVariants} layout>
+                  <RepoCard
+                    repo={repo}
+                    onRemove={fetchRepos}
+                    onUploadPrd={(r) => {
+                      setSelectedRepoForPrd(r);
+                      setIsPrdModalOpen(true);
+                    }}
+                    onSimulate={(r) => {
+                      setSelectedRepoForSim(r);
+                      setIsSimulateOpen(true);
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <div className="mt-8 border-t border-gh-border pt-8">
+              <h2 className="text-xl font-semibold text-white tracking-tight mb-6">Latest Agent Activity</h2>
+              {latestAction ? (
+                <div className="max-w-4xl">
+                  <div className="mb-4">
+                    <p className="text-sm text-gh-text-secondary">
+                      Showing most recent evaluation for <span className="font-medium text-white">{latestAction.repoFullName}</span> (Issue #{latestAction.issueNumber})
+                    </p>
+                  </div>
+                  <AgentCardGrid action={latestAction} />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8 border border-dashed border-gh-border rounded-xl bg-gh-card-bg/50">
+                  <span className="material-symbols-outlined text-gh-text-secondary text-3xl mb-3">
+                    query_stats
+                  </span>
+                  <p className="text-sm text-gh-text-secondary">
+                    Run a simulation or wait for a webhook to see agent results
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
 
