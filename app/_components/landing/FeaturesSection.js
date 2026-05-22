@@ -26,7 +26,7 @@ const features = [
   {
     icon: "speed",
     title: "Instant Feedback",
-    description: "Receive actionable PR comments automatically within seconds.",
+    description: "Receive actionable issue validations and comments automatically within seconds.",
     color: "text-[#bf87ff]",
     bg: "bg-[#bf87ff]/10",
     glowColor: "purple",

@@ -23,8 +23,8 @@ const steps = [
   },
   {
     num: "03",
-    title: "Automated PR Reviews",
-    description: "When developers open a Pull Request, PRDbot automatically reviews the code against the PRD and leaves actionable feedback if it detects drift.",
+    title: "Automated Issue Validation",
+    description: "When someone opens a GitHub Issue, PRDbot automatically reviews the description against the PRD and leaves actionable feedback if it detects missing requirements or scope drift.",
     icon: "robot_2",
     color: "text-[#238636]",
     bg: "bg-[#238636]/10",

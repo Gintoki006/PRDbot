@@ -24,7 +24,8 @@ export const GlowCard = ({
   height,
   customSize = false,
   radius = 24,
-  outerGlow = true
+  outerGlow = true,
+  trackingMode = 'fixed' // 'fixed' or 'relative'
 }) => {
   const cardRef = useRef(null);
   const innerRef = useRef(null);
@@ -32,20 +33,25 @@ export const GlowCard = ({
   useEffect(() => {
     const syncPointer = (e) => {
       if (cardRef.current) {
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        if (trackingMode === 'fixed') {
+          cardRef.current.style.setProperty('--x', e.clientX.toFixed(2));
+          cardRef.current.style.setProperty('--y', e.clientY.toFixed(2));
+        } else {
+          const rect = cardRef.current.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          cardRef.current.style.setProperty('--x', x.toFixed(2));
+          cardRef.current.style.setProperty('--y', y.toFixed(2));
+        }
         
-        cardRef.current.style.setProperty('--x', x.toFixed(2));
         cardRef.current.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(2));
-        cardRef.current.style.setProperty('--y', y.toFixed(2));
         cardRef.current.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(2));
       }
     };
 
     document.addEventListener('pointermove', syncPointer);
     return () => document.removeEventListener('pointermove', syncPointer);
-  }, []);
+  }, [trackingMode]);
 
   const { base, spread } = glowColorMap[glowColor] || glowColorMap.blue;
 
@@ -83,6 +89,10 @@ export const GlowCard = ({
       touchAction: 'none',
     };
 
+    if (trackingMode === 'fixed') {
+      baseStyles.backgroundAttachment = 'fixed';
+    }
+
     if (width !== undefined) {
       baseStyles.width = typeof width === 'number' ? `${width}px` : width;
     }
@@ -108,6 +118,11 @@ export const GlowCard = ({
       mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
       mask-clip: padding-box, border-box;
       mask-composite: intersect;
+    }
+    
+    [data-glow-tracking="fixed"]::before,
+    [data-glow-tracking="fixed"]::after {
+      background-attachment: fixed;
     }
     
     [data-glow]::before {
@@ -154,6 +169,7 @@ export const GlowCard = ({
       <div
         ref={cardRef}
         data-glow
+        data-glow-tracking={trackingMode}
         style={getInlineStyles()}
         className={`
           ${getSizeClasses()}
@@ -162,7 +178,7 @@ export const GlowCard = ({
           ${className}
         `}
       >
-        <div ref={innerRef} data-glow></div>
+        <div ref={innerRef} data-glow data-glow-tracking={trackingMode}></div>
         {children}
       </div>
     </>

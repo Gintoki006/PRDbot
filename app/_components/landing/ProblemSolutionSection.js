@@ -5,24 +5,24 @@ import { GlowCard } from "../ui/spotlight-card";
 
 const comparisons = [
   {
-    title: "Code Review",
-    before: "Reviewers manually cross-reference Pull Requests against outdated Jira tickets and scattered Notion docs.",
-    after: "PRDbot automatically leaves inline comments the second a PR is opened, strictly checking against the active PRD."
+    title: "Issue Creation",
+    before: "Product managers and developers manually write issues and hope they remembered all the edge cases from the scattered Notion PRDs.",
+    after: "The moment a GitHub issue is opened, PRDbot instantly validates it against your active PRD and flags any missing requirements."
   },
   {
-    title: "QA Process",
-    before: "Features are fully built, deployed to staging, and then kicked back by QA for missing documented edge cases.",
-    after: "Logic drifts and missed requirements are caught and blocked in the PR before the code ever reaches QA."
+    title: "Scope Creep",
+    before: "Developers start working on issues that include features or technical changes never approved in the original product specs.",
+    after: "Rogue issues and scope creep are caught immediately. PRDbot warns the team if an issue goes off-script before any code is written."
   },
   {
-    title: "Design System",
-    before: "Developers use custom CSS or wrong components because 'it looks close enough' to the original mockups.",
-    after: "Strict component enforcement ensures only approved Tailwind classes or UI library components are used."
+    title: "Acceptance Criteria",
+    before: "Issues are vaguely defined, leading to endless back-and-forth ping-pong between developers and PMs during the sprint.",
+    after: "PRDbot automatically comments on the issue with the exact missing acceptance criteria sourced directly from your PRD."
   },
   {
     title: "Alignment",
-    before: "Product Managers have zero visibility into implementation details until the feature is already shipped.",
-    after: "PMs get total peace of mind knowing the PRD acts as an executable contract that blocks misaligned merges."
+    before: "The PRD gets written once, ignored by the engineering team, and becomes a stale document almost instantly.",
+    after: "The PRD becomes an executable contract. Every single GitHub issue is tightly coupled to your single source of truth."
   }
 ];
 
