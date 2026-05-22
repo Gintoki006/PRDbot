@@ -1,0 +1,50 @@
+// PRDbot — Prisma Schema
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Repository {
+  id           String   @id @default(uuid())
+  userId       String
+  repoFullName String   @unique
+  webhookId    Int?
+  createdAt    DateTime @default(now())
+
+  prd Prd?
+}
+
+model Prd {
+  id           String   @id @default(uuid())
+  userId       String
+  repoFullName String   @unique
+  prdText      String
+  ruleCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  repository Repository @relation(fields: [repoFullName], references: [repoFullName], onDelete: Cascade)
+}
+
+model AgentAction {
+  id             String   @id @default(uuid())
+  repoFullName   String
+  issueNumber    Int
+  issueTitle     String   @default("")
+  toolCalled     String   @default("none")
+  ruleQuoted     String   @default("")
+  confidence     Int      @default(0)
+  result         String   @default("")
+  iterationCount Int      @default(0)
+  status         String   @default("compliant")
+  simulated      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([repoFullName])
+}
