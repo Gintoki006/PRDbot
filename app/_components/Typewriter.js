@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const texts = [
   { white: "Your PRD’s", blue: "Automated Enforcer" },
-  { white: "Every issue reviewed.", blue: "Every sprint aligned." },
+  { white: "Ship faster without ", blue: "losing direction." },
   { white: "Read the PRD. Review the issue.", blue: "Enforce the vision." },
   { white: "AI-powered", blue: "PRD review." }
 ];
