@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
+import { extractPrdMeta } from "../../../lib/agent/extractPrdMeta";
 
 export const runtime = "nodejs";
 
@@ -76,6 +77,9 @@ export async function POST(req) {
     }
 
     const ruleCount = countRules(prdText);
+    const prdMeta = await extractPrdMeta(prdText);
+    
+    console.log("[PRD_META]", prdMeta);
 
     // Upsert the PRD
     const prd = await prisma.prd.upsert({
@@ -85,12 +89,14 @@ export async function POST(req) {
       update: {
         prdText,
         ruleCount,
+        prdMeta,
       },
       create: {
         userId,
         repoFullName,
         prdText,
         ruleCount,
+        prdMeta,
       },
     });
 
