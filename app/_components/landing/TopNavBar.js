@@ -62,12 +62,12 @@ export default function TopNavBar() {
             >
               Pricing
             </a>
-            <a
-              className="text-white font-semibold text-sm hover:text-gh-text-secondary py-2 px-1"
-              href="#"
+            <Link
+              className="text-white font-semibold text-sm hover:text-gh-text-secondary py-2 px-1 transition-colors"
+              href="/docs"
             >
               Docs
-            </a>
+            </Link>
           </div>
         </div>
         <div className="flex items-center gap-3">

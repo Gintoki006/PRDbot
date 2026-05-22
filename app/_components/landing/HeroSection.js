@@ -40,7 +40,7 @@ export default function HeroSection() {
                 <span className="material-symbols-outlined text-lg">chevron_right</span>
               </Link>
             )}
-            <Link href="#" className="gh-btn-secondary px-8 py-3 text-lg font-semibold rounded-md flex items-center gap-2 cursor-pointer">
+            <Link href="/docs" className="gh-btn-secondary px-8 py-3 text-lg font-semibold rounded-md flex items-center gap-2 cursor-pointer">
               View documentation
             </Link>
           </motion.div>

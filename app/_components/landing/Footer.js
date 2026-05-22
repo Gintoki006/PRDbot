@@ -51,8 +51,8 @@ export default function Footer() {
               <a className="text-sm text-gh-text-secondary hover:text-white transition-colors" href="#">
                 Integrations
               </a>
-              <a className="text-sm text-gh-text-secondary hover:text-white transition-colors" href="#">
-                API Docs
+              <a className="text-sm text-gh-text-secondary hover:text-white transition-colors" href="/docs">
+                Documentation
               </a>
               <a className="text-sm text-gh-text-secondary hover:text-white transition-colors" href="#">
                 Status
