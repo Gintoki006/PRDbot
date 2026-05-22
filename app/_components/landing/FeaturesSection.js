@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { GlowCard } from "../ui/spotlight-card";
 
 const features = [
   {
@@ -9,7 +10,9 @@ const features = [
     description: "Drift Detection, Quality Review, and Rule Enforcement work in unison to keep your implementation tightly aligned with the PRD. Never ship a misaligned feature again.",
     color: "text-gh-blue",
     bg: "bg-gh-blue/10",
-    className: "md:col-span-2 md:row-span-2 flex flex-col justify-end p-8 md:p-12 overflow-hidden relative group",
+    glowColor: "blue",
+    className: "md:col-span-2 md:row-span-2",
+    innerClassName: "flex flex-col justify-end p-8 md:p-12 overflow-hidden relative group h-full",
     titleSize: "text-2xl md:text-3xl lg:text-4xl",
     visual: (
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -26,7 +29,9 @@ const features = [
     description: "Receive actionable PR comments automatically within seconds.",
     color: "text-[#bf87ff]",
     bg: "bg-[#bf87ff]/10",
-    className: "md:col-span-1 md:row-span-1 p-8 flex flex-col justify-between group overflow-hidden relative",
+    glowColor: "purple",
+    className: "md:col-span-1 md:row-span-1",
+    innerClassName: "p-8 flex flex-col justify-between group overflow-hidden relative h-full",
     titleSize: "text-xl",
     visual: (
       <div className="absolute -bottom-8 -right-8 opacity-[0.03] group-hover:opacity-10 group-hover:-translate-y-2 group-hover:-translate-x-2 transition-all duration-500 pointer-events-none">
@@ -40,7 +45,9 @@ const features = [
     description: "Enforce strict design systems effortlessly.",
     color: "text-orange-400",
     bg: "bg-orange-400/10",
-    className: "md:col-span-1 md:row-span-1 p-8 flex flex-col justify-between group overflow-hidden relative",
+    glowColor: "orange",
+    className: "md:col-span-1 md:row-span-1",
+    innerClassName: "p-8 flex flex-col justify-between group overflow-hidden relative h-full",
     titleSize: "text-xl",
     visual: (
       <div className="absolute -bottom-8 -right-8 opacity-[0.03] group-hover:opacity-10 group-hover:-translate-y-2 group-hover:-translate-x-2 transition-all duration-500 pointer-events-none">
@@ -54,11 +61,13 @@ const features = [
     description: "Hook up your repositories with a single click. No massive CI/CD workflows to manually configure.",
     color: "text-gh-green",
     bg: "bg-gh-green/10",
-    className: "md:col-span-3 md:row-span-1 flex flex-col md:flex-row items-start md:items-center justify-between p-8 md:p-12 group overflow-hidden relative",
+    glowColor: "green",
+    className: "md:col-span-3 md:row-span-1",
+    innerClassName: "flex flex-col md:flex-row items-start md:items-center justify-between p-8 md:p-12 group overflow-hidden relative h-full",
     titleSize: "text-2xl md:text-3xl",
     visual: (
       <div className="hidden md:flex flex-1 items-center justify-end relative z-10 w-full mt-8 md:mt-0">
-        <div className="flex items-center gap-6 bg-[#0d1117] p-6 rounded-2xl border border-gh-border shadow-inner group-hover:border-gh-green/30 transition-colors duration-500">
+        <div className="flex items-center gap-6 bg-[#0d1117] p-6 rounded-2xl border border-gh-border shadow-inner group-hover:border-gh-green/30 transition-colors duration-500 z-20">
            <div className="flex flex-col items-center gap-2">
              <div className="w-12 h-12 rounded-full bg-gh-header border border-gh-border flex items-center justify-center shadow-lg">
                <span className="material-symbols-outlined text-2xl text-gh-text-secondary">folder</span>
@@ -113,23 +122,29 @@ export default function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-              className={`bg-[#0d1117] border border-[#30363d] rounded-3xl hover:border-[#58a6ff]/50 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-[#58a6ff]/5 ${feature.className}`}
+              className={feature.className}
             >
-              <div className="relative z-10">
-                <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-inner border border-white/5`}>
-                  <span className={`material-symbols-outlined ${feature.color} text-3xl`}>
-                    {feature.icon}
-                  </span>
+              <GlowCard 
+                customSize={true} 
+                glowColor={feature.glowColor}
+                className={feature.innerClassName}
+              >
+                <div className="relative z-10 pointer-events-none">
+                  <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-inner border border-white/5`}>
+                    <span className={`material-symbols-outlined ${feature.color} text-3xl`}>
+                      {feature.icon}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className={`${feature.titleSize} font-bold text-white mb-3 tracking-tight`}>{feature.title}</h3>
+                    <p className="text-[#8b949e] text-[15px] leading-relaxed max-w-md">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className={`${feature.titleSize} font-bold text-white mb-3 tracking-tight`}>{feature.title}</h3>
-                  <p className="text-[#8b949e] text-[15px] leading-relaxed max-w-md">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
 
-              {feature.visual && feature.visual}
+                {feature.visual && feature.visual}
+              </GlowCard>
             </motion.div>
           ))}
         </div>
