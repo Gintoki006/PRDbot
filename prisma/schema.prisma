@@ -26,6 +26,7 @@ model Prd {
   repoFullName String   @unique
   prdText      String
   ruleCount    Int      @default(0)
+  prdMeta      Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -44,6 +45,24 @@ model AgentAction {
   iterationCount Int      @default(0)
   status         String   @default("compliant")
   simulated      Boolean  @default(false)
+  
+  // Pass 1: Drift Detection
+  driftStatus       String   @default("compliant")
+  driftScore        Int      @default(0)
+  driftType         String   @default("none")
+  driftReason       String   @default("")
+  driftSuggestedAlt String   @default("")
+
+  // Pass 2: AI Issue Review
+  aiReviewStatus    String   @default("compliant")
+  alignmentScore    Int      @default(0)
+  aiFindings        Json     @default("[]")
+  aiMissing         Json     @default("[]")
+
+  // Pass 3: Rule Enforcement
+  ruleEnforcementStatus String @default("compliant")
+  suggestedRewrite  String   @default("")
+
   createdAt      DateTime @default(now())
 
   @@index([repoFullName])
