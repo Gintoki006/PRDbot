@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import CustomUserButton from "../auth/CustomUserButton";
 
 export default function TopNavBar() {
@@ -22,9 +23,12 @@ export default function TopNavBar() {
   }, []);
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       id="globalNav"
-      className={`fixed top-0 w-full z-50 border-b transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 border-b transition-colors duration-300 ${
         scrolled
           ? "bg-gh-header/90 backdrop-blur-md border-gh-border"
           : "bg-gh-header border-transparent"
@@ -102,6 +106,6 @@ export default function TopNavBar() {
           )}
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

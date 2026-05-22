@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "./Toast";
 
 export default function PrdUploadModal({ isOpen, onClose, repo, onSuccess }) {
@@ -15,8 +16,6 @@ export default function PrdUploadModal({ isOpen, onClose, repo, onSuccess }) {
       setError("");
     }
   }, [isOpen, repo]);
-
-  if (!isOpen || !repo) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,96 +68,112 @@ export default function PrdUploadModal({ isOpen, onClose, repo, onSuccess }) {
     }
   };
 
-  // Live heuristic preview
   const ruleCountPreview = (prdText || "").split("\n").filter(line => /^\s*[-*\d]\.?\s+/.test(line)).length;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-gh-card-bg border border-gh-border rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="p-4 border-b border-gh-border flex items-center justify-between bg-gh-header flex-none">
-          <div>
-            <h2 className="text-lg font-semibold text-white">Product Requirements Document</h2>
-            <p className="text-sm text-gh-text-secondary mt-0.5">{repo.repoFullName}</p>
-          </div>
-          <button
+    <AnimatePresence>
+      {isOpen && repo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={onClose}
-            className="text-gh-text-secondary hover:text-white transition-colors"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="bg-gh-card-bg border border-gh-border rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden relative z-10"
           >
-            <span className="material-symbols-outlined text-xl">close</span>
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-          <div className="p-6 flex-1 overflow-y-auto min-h-[300px]">
-            <label className="block text-sm font-medium text-white mb-2">
-              Paste your PRD Rules (Markdown supported)
-            </label>
-            <textarea
-              value={prdText}
-              onChange={(e) => setPrdText(e.target.value)}
-              placeholder="1. All new API routes must have basic rate limiting...&#10;2. Forms must display loading spinners during submission...&#10;..."
-              disabled={loading}
-              className="w-full h-[300px] md:h-[400px] bg-gh-bg border border-gh-border text-white rounded-lg p-4 focus:ring-1 focus:ring-gh-blue focus:border-gh-blue outline-none transition-all placeholder-gh-text-secondary disabled:opacity-50 font-mono text-sm resize-none"
-            />
-            
-            <div className="flex justify-between items-center mt-3 text-xs text-gh-text-secondary px-1">
-              <span>{prdText.length} characters</span>
-              <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">format_list_bulleted</span>
-                ~{ruleCountPreview} rules detected
-              </span>
-            </div>
-
-            {error && (
-              <div className="mt-4 p-3 bg-red-900/20 border border-red-900/50 rounded-lg flex items-start gap-2">
-                <span className="material-symbols-outlined text-red-400 text-sm mt-0.5">error</span>
-                <p className="text-sm text-red-400">{error}</p>
+            <div className="p-4 border-b border-gh-border flex items-center justify-between bg-gh-header flex-none">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Product Requirements Document</h2>
+                <p className="text-sm text-gh-text-secondary mt-0.5">{repo.repoFullName}</p>
               </div>
-            )}
-          </div>
-
-          <div className="p-4 border-t border-gh-border flex justify-between items-center bg-gh-header flex-none">
-            {repo.prd ? (
               <button
-                type="button"
-                onClick={handleRemove}
-                disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-[16px]">delete</span>
-                Delete PRD
-              </button>
-            ) : (
-              <div></div> // Spacer
-            )}
-
-            <div className="flex gap-3">
-              <button
-                type="button"
                 onClick={onClose}
-                disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-gh-text-main bg-transparent border border-transparent hover:bg-surface-variant rounded-lg transition-colors disabled:opacity-50"
+                className="text-gh-text-secondary hover:text-white transition-colors"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading || !prdText.trim()}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gh-blue hover:bg-gh-blue/90 rounded-lg transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <>
-                    <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
-                    Saving...
-                  </>
-                ) : (
-                  "Save PRD"
-                )}
+                <span className="material-symbols-outlined text-xl">close</span>
               </button>
             </div>
-          </div>
-        </form>
-      </div>
-    </div>
+            
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-6 flex-1 overflow-y-auto min-h-[300px]">
+                <label className="block text-sm font-medium text-white mb-2">
+                  Paste your PRD Rules (Markdown supported)
+                </label>
+                <textarea
+                  value={prdText}
+                  onChange={(e) => setPrdText(e.target.value)}
+                  placeholder="1. All new API routes must have basic rate limiting...&#10;2. Forms must display loading spinners during submission...&#10;..."
+                  disabled={loading}
+                  className="w-full h-[300px] md:h-[400px] bg-gh-bg border border-gh-border text-white rounded-lg p-4 focus:ring-1 focus:ring-gh-blue focus:border-gh-blue outline-none transition-all placeholder-gh-text-secondary disabled:opacity-50 font-mono text-sm resize-none"
+                />
+                
+                <div className="flex justify-between items-center mt-3 text-xs text-gh-text-secondary px-1">
+                  <span>{prdText.length} characters</span>
+                  <span className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">format_list_bulleted</span>
+                    ~{ruleCountPreview} rules detected
+                  </span>
+                </div>
+
+                {error && (
+                  <div className="mt-4 p-3 bg-red-900/20 border border-red-900/50 rounded-lg flex items-start gap-2">
+                    <span className="material-symbols-outlined text-red-400 text-sm mt-0.5">error</span>
+                    <p className="text-sm text-red-400">{error}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 border-t border-gh-border flex justify-between items-center bg-gh-header flex-none">
+                {repo.prd ? (
+                  <button
+                    type="button"
+                    onClick={handleRemove}
+                    disabled={loading}
+                    className="px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                    Delete PRD
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={loading}
+                    className="px-4 py-2 text-sm font-medium text-gh-text-main bg-transparent border border-transparent hover:bg-surface-variant rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading || !prdText.trim()}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gh-blue hover:bg-gh-blue/90 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                        Saving...
+                      </>
+                    ) : (
+                      "Save PRD"
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

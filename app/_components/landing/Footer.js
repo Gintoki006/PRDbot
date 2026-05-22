@@ -1,10 +1,30 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
 export default function Footer() {
   return (
     <footer className="w-full py-16 bg-gh-bg border-t border-gh-border mt-24">
       <div className="max-w-[1280px] mx-auto px-4 md:px-16">
         {/* Top Links Band */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-          <div className="flex flex-col gap-4">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16"
+        >
+          <motion.div variants={item} className="flex flex-col gap-4">
             <span className="text-xs font-semibold text-gh-text-main uppercase tracking-[0.1em] mb-2">
               Product
             </span>
@@ -22,8 +42,8 @@ export default function Footer() {
                 Security
               </a>
             </div>
-          </div>
-          <div className="flex flex-col gap-4">
+          </motion.div>
+          <motion.div variants={item} className="flex flex-col gap-4">
             <span className="text-xs font-semibold text-gh-text-main uppercase tracking-[0.1em] mb-2">
               Platform
             </span>
@@ -41,8 +61,8 @@ export default function Footer() {
                 Dev Portal
               </a>
             </div>
-          </div>
-          <div className="flex flex-col gap-4">
+          </motion.div>
+          <motion.div variants={item} className="flex flex-col gap-4">
             <span className="text-xs font-semibold text-gh-text-main uppercase tracking-[0.1em] mb-2">
               Company
             </span>
@@ -60,8 +80,8 @@ export default function Footer() {
                 Press
               </a>
             </div>
-          </div>
-          <div className="flex flex-col gap-4">
+          </motion.div>
+          <motion.div variants={item} className="flex flex-col gap-4">
             <span className="text-xs font-semibold text-gh-text-main uppercase tracking-[0.1em] mb-2">
               Legal
             </span>
@@ -76,14 +96,20 @@ export default function Footer() {
                 Security
               </a>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         {/* Large Wordmark Section */}
-        <div className="relative flex flex-col items-center justify-end h-48 md:h-64 overflow-hidden pointer-events-none">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative flex flex-col items-center justify-end h-48 md:h-64 overflow-hidden pointer-events-none"
+        >
           <h2 className="text-[15vw] md:text-[18vw] font-bold leading-none select-none pointer-events-none opacity-[0.03] bg-clip-text text-transparent bg-gradient-to-b from-white to-transparent tracking-tighter">
             PRDbot
           </h2>
-        </div>
+        </motion.div>
         {/* Bottom Social & Copyright Band */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gh-border gap-6">
           <div className="flex items-center gap-6">

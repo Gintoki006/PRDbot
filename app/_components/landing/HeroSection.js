@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import Typewriter from "../Typewriter";
 
 export default function HeroSection() {
@@ -12,11 +13,21 @@ export default function HeroSection() {
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
         <div className="flex flex-col gap-6 text-left">
           <Typewriter />
-          <p className="text-lg md:text-xl text-gh-text-secondary max-w-xl leading-relaxed mt-4">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg md:text-xl text-gh-text-secondary max-w-xl leading-relaxed mt-4"
+          >
             AI-powered GitHub issue validation that ensures every task aligns with your product
             requirements. Stop shipping misaligned features.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-4">
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-wrap gap-3 mt-4"
+          >
             {isLoaded && !isSignedIn && (
               <Link href="/sign-up" className="gh-btn-primary px-8 py-3 text-lg font-semibold rounded-md flex items-center gap-2 cursor-pointer">
                 Get started
@@ -32,9 +43,14 @@ export default function HeroSection() {
             <Link href="#" className="gh-btn-secondary px-8 py-3 text-lg font-semibold rounded-md flex items-center gap-2 cursor-pointer">
               View documentation
             </Link>
-          </div>
+          </motion.div>
         </div>
-        <div className="relative w-full flex items-center justify-center lg:justify-end min-h-[400px]">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          className="relative w-full flex items-center justify-center lg:justify-end min-h-[400px]"
+        >
           {/* Floating Icons UI Block */}
           <div className="relative w-full max-w-lg aspect-square">
             {/* Background glow */}
@@ -82,7 +98,7 @@ export default function HeroSection() {
               </span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import supabaseClient from "../../../lib/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 const TYPE_STYLES = {
   info: {
@@ -58,87 +59,106 @@ export default function AgentLogPanel({ repoFullName, isOpen, onClose }) {
     };
   }, [repoFullName, isOpen]);
 
-  // Auto-scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [logs]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-gh-card-bg border border-gh-border rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[80vh] overflow-hidden">
-        <div className="p-4 border-b border-gh-border flex items-center justify-between bg-gh-header flex-none">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-gh-blue text-lg">
-              terminal
-            </span>
-            <h2 className="text-lg font-semibold text-white">Agent Log</h2>
-            <span className="text-xs text-gh-text-secondary">
-              {repoFullName}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {logs.length > 0 && (
-              <button
-                onClick={() => setLogs([])}
-                className="text-xs text-gh-text-secondary hover:text-white transition-colors px-2 py-1 rounded"
-              >
-                Clear
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="text-gh-text-secondary hover:text-white transition-colors"
-            >
-              <span className="material-symbols-outlined text-xl">close</span>
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto p-4 space-y-2 min-h-[200px]"
-        >
-          {logs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-gh-text-secondary py-12">
-              <span className="material-symbols-outlined text-4xl mb-3 animate-pulse">
-                radio_button_checked
-              </span>
-              <p className="text-sm">Waiting for agent activity...</p>
-              <p className="text-xs mt-1">
-                Logs will appear here in real-time
-              </p>
-            </div>
-          ) : (
-            logs.map((log, i) => {
-              const style = TYPE_STYLES[log.type] || TYPE_STYLES.info;
-              return (
-                <div
-                  key={i}
-                  className={`flex items-start gap-2.5 p-3 rounded-lg border ${style.bg} ${style.border} transition-all animate-in fade-in slide-in-from-bottom-1 duration-200`}
-                >
-                  <span
-                    className={`material-symbols-outlined text-[16px] mt-0.5 flex-none ${style.text}`}
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="bg-gh-card-bg border border-gh-border rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[80vh] overflow-hidden relative z-10"
+          >
+            <div className="p-4 border-b border-gh-border flex items-center justify-between bg-gh-header flex-none">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-gh-blue text-lg">
+                  terminal
+                </span>
+                <h2 className="text-lg font-semibold text-white">Agent Log</h2>
+                <span className="text-xs text-gh-text-secondary">
+                  {repoFullName}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {logs.length > 0 && (
+                  <button
+                    onClick={() => setLogs([])}
+                    className="text-xs text-gh-text-secondary hover:text-white transition-colors px-2 py-1 rounded"
                   >
-                    {style.icon}
+                    Clear
+                  </button>
+                )}
+                <button
+                  onClick={onClose}
+                  className="text-gh-text-secondary hover:text-white transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">close</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto p-4 space-y-2 min-h-[200px]"
+            >
+              {logs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-gh-text-secondary py-12">
+                  <span className="material-symbols-outlined text-4xl mb-3 animate-pulse">
+                    radio_button_checked
                   </span>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm ${style.text}`}>{log.message}</p>
-                    {log.timestamp && (
-                      <p className="text-[10px] text-gh-text-secondary mt-1">
-                        {new Date(log.timestamp).toLocaleTimeString()}
-                      </p>
-                    )}
-                  </div>
+                  <p className="text-sm">Waiting for agent activity...</p>
+                  <p className="text-xs mt-1">
+                    Logs will appear here in real-time
+                  </p>
                 </div>
-              );
-            })
-          )}
+              ) : (
+                <AnimatePresence>
+                  {logs.map((log, i) => {
+                    const style = TYPE_STYLES[log.type] || TYPE_STYLES.info;
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`flex items-start gap-2.5 p-3 rounded-lg border ${style.bg} ${style.border} transition-all`}
+                      >
+                        <span
+                          className={`material-symbols-outlined text-[16px] mt-0.5 flex-none ${style.text}`}
+                        >
+                          {style.icon}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm ${style.text}`}>{log.message}</p>
+                          {log.timestamp && (
+                            <p className="text-[10px] text-gh-text-secondary mt-1">
+                              {new Date(log.timestamp).toLocaleTimeString()}
+                            </p>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              )}
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

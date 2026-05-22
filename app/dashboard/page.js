@@ -7,6 +7,18 @@ import PrdUploadModal from "./_components/PrdUploadModal";
 import SimulatePanel from "./_components/SimulatePanel";
 import AgentLogPanel from "./_components/AgentLogPanel";
 
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+};
+
 export default function DashboardPage() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +58,12 @@ export default function DashboardPage() {
   }, [fetchRepos]);
 
   return (
-    <div className="p-4 md:p-8 max-w-[1440px] mx-auto h-full flex flex-col">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="p-4 md:p-8 max-w-[1440px] mx-auto h-full flex flex-col"
+    >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Repositories</h1>
@@ -80,7 +97,12 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : repos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full min-h-[400px] border border-dashed border-gh-border rounded-xl bg-gh-card-bg/50">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col items-center justify-center h-full min-h-[400px] border border-dashed border-gh-border rounded-xl bg-gh-card-bg/50"
+          >
             <div className="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mb-4 border border-gh-border">
               <span className="material-symbols-outlined text-gh-text-secondary text-3xl">hub</span>
             </div>
@@ -94,25 +116,31 @@ export default function DashboardPage() {
             >
               Connect your first repository
             </button>
-          </div>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
             {repos.map((repo) => (
-              <RepoCard
-                key={repo.id}
-                repo={repo}
-                onRemove={fetchRepos}
-                onUploadPrd={(r) => {
-                  setSelectedRepoForPrd(r);
-                  setIsPrdModalOpen(true);
-                }}
-                onSimulate={(r) => {
-                  setSelectedRepoForSim(r);
-                  setIsSimulateOpen(true);
-                }}
-              />
+              <motion.div key={repo.id} variants={itemVariants} layout>
+                <RepoCard
+                  repo={repo}
+                  onRemove={fetchRepos}
+                  onUploadPrd={(r) => {
+                    setSelectedRepoForPrd(r);
+                    setIsPrdModalOpen(true);
+                  }}
+                  onSimulate={(r) => {
+                    setSelectedRepoForSim(r);
+                    setIsSimulateOpen(true);
+                  }}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -153,6 +181,6 @@ export default function DashboardPage() {
           setAgentLogRepo(null);
         }}
       />
-    </div>
+    </motion.div>
   );
 }
