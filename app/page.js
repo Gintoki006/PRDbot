@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import CustomUserButton from "./_components/auth/CustomUserButton";
+import Typewriter from "./_components/Typewriter";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -111,11 +112,8 @@ export default function Home() {
         <section className="relative py-24 md:py-32 overflow-hidden px-4 md:px-16">
           <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div className="flex flex-col gap-6 text-left">
-              <h1 className="font-display-hero text-5xl md:text-7xl text-white">
-                Your PRD’s <br />
-                <span className="text-gh-blue">Automated Enforcer</span>
-              </h1>
-              <p className="text-lg md:text-xl text-gh-text-secondary max-w-xl leading-relaxed">
+              <Typewriter />
+              <p className="text-lg md:text-xl text-gh-text-secondary max-w-xl leading-relaxed mt-4">
                 AI-powered GitHub issue validation that ensures every task aligns with your product
                 requirements. Stop shipping misaligned features.
               </p>
