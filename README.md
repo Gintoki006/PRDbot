@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PRDBot
+
+PRDBot is an intelligent GitHub assistant designed to automatically review issues and ensure they align with your project's Product Requirements Document (PRD). By integrating directly into your GitHub workflow, it helps maintain product consistency, catches deviations early, and provides actionable feedback to developers and product managers.
+
+## How It Works
+
+PRDBot operates through a seamless, event-driven architecture:
+
+1. **Repository Configuration:** Users log into the PRDBot dashboard, connect a GitHub repository, and upload their Product Requirements Document (PRD) in Markdown format.
+2. **Event Listening:** PRDBot listens to incoming GitHub webhooks (such as when an issue is created or updated) for the registered repositories.
+3. **Background Processing:** The webhook enqueues a background job via Inngest, ensuring reliable and durable execution without blocking the main API.
+4. **AI Analysis:** The Gemini AI agent fetches the relevant PRD and analyzes the issue's content against the documented requirements.
+5. **Actionable Feedback:** If the agent detects a deviation from the PRD, it uses GitHub's API (via Octokit) to automatically add a `prdbot-review` label and post a detailed comment on the issue. This comment includes the specific rule violated, an explanation, and a suggested rewrite.
+
+## Technology Stack
+
+- **Framework:** Next.js (App Router)
+- **Authentication:** Clerk
+- **Database ORM:** Prisma
+- **Database Hosting:** Supabase (PostgreSQL)
+- **Background Jobs:** Inngest
+- **AI Model:** Google Gemini
+- **GitHub Integration:** Octokit
+- **Styling:** Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+You will need accounts and API keys for the following services:
+- Clerk (Authentication)
+- Supabase (PostgreSQL Database)
+- Google AI Studio (Gemini API Key)
+- GitHub (Webhook Secret and Personal Access Token)
+- Inngest (Background Jobs)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Local Development Setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Environment Variables:**
+   Copy the example environment file and fill in your specific keys:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Open `.env.local` and populate all the required secrets.
 
-## Learn More
+3. **Database Setup:**
+   Generate the Prisma client and run the initial database migrations to set up your Supabase database:
+   ```bash
+   npx prisma generate
+   npx prisma migrate dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Run the Development Server:**
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Run the Inngest Dev Server:**
+   In a separate terminal window, start the Inngest local development server to process background jobs:
+   ```bash
+   npx inngest-cli@latest dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Application Structure
 
-## Deploy on Vercel
+- `app/`: Next.js frontend pages, API routes, and dashboard layouts.
+- `lib/agent/`: Core AI logic, prompt definitions, and tool execution handlers.
+- `lib/inngest/`: Inngest client initialization and background function definitions.
+- `lib/webhooks/`: Utilities for securely verifying incoming GitHub webhook payloads.
+- `prisma/`: Database schema and migration files.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application is optimized for deployment on Vercel. Ensure that all environment variables specified in `.env.example` are configured in your Vercel project settings prior to deployment. You will also need to configure your GitHub webhook to point to your production URL (`/api/webhooks/github`).
