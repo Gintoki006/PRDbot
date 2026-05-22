@@ -22,20 +22,24 @@ export const GlowCard = ({
   size = 'md',
   width,
   height,
-  customSize = false
+  customSize = false,
+  radius = 24,
+  outerGlow = true
 }) => {
   const cardRef = useRef(null);
   const innerRef = useRef(null);
 
   useEffect(() => {
     const syncPointer = (e) => {
-      const { clientX: x, clientY: y } = e;
-      
       if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
         cardRef.current.style.setProperty('--x', x.toFixed(2));
-        cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2));
+        cardRef.current.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(2));
         cardRef.current.style.setProperty('--y', y.toFixed(2));
-        cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
+        cardRef.current.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(2));
       }
     };
 
@@ -56,12 +60,12 @@ export const GlowCard = ({
     const baseStyles = {
       '--base': base,
       '--spread': spread,
-      '--radius': '24', // Match rounded-3xl
+      '--radius': radius.toString(), // Dynamic radius
       '--border': '1',
       '--backdrop': '#0d1117', // Match current bg color
       '--backup-border': '#30363d', // Match current border color
       '--size': '250',
-      '--outer': '1',
+      '--outer': outerGlow ? '1' : '0',
       '--border-size': 'calc(var(--border, 1) * 1px)',
       '--spotlight-size': 'calc(var(--size, 150) * 1px)',
       '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
@@ -74,7 +78,6 @@ export const GlowCard = ({
       backgroundColor: 'var(--backdrop, transparent)',
       backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
       backgroundPosition: '50% 50%',
-      backgroundAttachment: 'fixed',
       border: 'var(--border-size) solid var(--backup-border)',
       position: 'relative',
       touchAction: 'none',
@@ -99,7 +102,6 @@ export const GlowCard = ({
       inset: calc(var(--border-size) * -1);
       border: var(--border-size) solid transparent;
       border-radius: calc(var(--radius) * 1px);
-      background-attachment: fixed;
       background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
       background-repeat: no-repeat;
       background-position: 50% 50%;

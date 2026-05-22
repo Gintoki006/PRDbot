@@ -52,7 +52,7 @@ export default function TopNavBar() {
             </a>
             <a
               className="text-[#8b949e] font-medium text-sm hover:text-white hover:bg-[#30363d]/50 rounded-full py-1.5 px-4 transition-all"
-              href="#"
+              href="#features"
             >
               Features
             </a>

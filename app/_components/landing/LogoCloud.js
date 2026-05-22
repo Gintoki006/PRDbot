@@ -19,31 +19,40 @@ const item = {
 
 export default function LogoCloud() {
   return (
-    <section className="border-y border-gh-border bg-gh-header py-8 overflow-hidden">
-      <motion.div 
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-50px" }}
-        className="max-w-[1280px] mx-auto px-4 flex flex-wrap justify-center items-center gap-12 grayscale"
-      >
-        <motion.div variants={item} className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-2xl">account_tree</span>
-          <span className="font-bold text-lg text-white">GitLab</span>
+    <section className="border-y border-gh-border bg-[#0d1117] py-12 overflow-hidden">
+      <div className="max-w-[1280px] mx-auto px-4 flex flex-col items-center">
+        <p className="text-[#8b949e] text-sm font-semibold uppercase tracking-widest mb-8 text-center">
+          Trusted by engineering teams at
+        </p>
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          className="flex flex-wrap justify-center items-center gap-12 md:gap-16 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+        >
+          <motion.div variants={item} className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-3xl">hub</span>
+            <span className="font-bold text-xl tracking-tight text-white">Nexus</span>
+          </motion.div>
+          <motion.div variants={item} className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-3xl">token</span>
+            <span className="font-bold text-xl tracking-tight text-white">Quantum</span>
+          </motion.div>
+          <motion.div variants={item} className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-3xl">polyline</span>
+            <span className="font-bold text-xl tracking-tight text-white">Vertex</span>
+          </motion.div>
+          <motion.div variants={item} className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-3xl">change_history</span>
+            <span className="font-bold text-xl tracking-tight text-white">Zenith</span>
+          </motion.div>
+          <motion.div variants={item} className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-3xl">flare</span>
+            <span className="font-bold text-xl tracking-tight text-white">Lumina</span>
+          </motion.div>
         </motion.div>
-        <motion.div variants={item} className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-2xl">code_blocks</span>
-          <span className="font-bold text-lg text-white">Bitbucket</span>
-        </motion.div>
-        <motion.div variants={item} className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-2xl">hub</span>
-          <span className="font-bold text-lg text-white">Azure DevOps</span>
-        </motion.div>
-        <motion.div variants={item} className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-2xl">rocket_launch</span>
-          <span className="font-bold text-lg text-white">Linear</span>
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

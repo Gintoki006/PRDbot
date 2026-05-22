@@ -91,7 +91,7 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-32 px-4 md:px-16 bg-[#06090f] border-y border-gh-border relative overflow-hidden">
+    <section id="features" className="py-32 px-4 md:px-16 bg-[#06090f] border-y border-gh-border relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gh-border to-transparent"></div>
       <div className="max-w-[1200px] mx-auto relative z-10">
         <div className="text-center mb-20 max-w-2xl mx-auto">

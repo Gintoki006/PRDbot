@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import Typewriter from "../Typewriter";
-
+import { GlowCard } from "../ui/spotlight-card";
 export default function HeroSection() {
   const { isSignedIn, isLoaded } = useAuth();
 
@@ -61,47 +61,55 @@ export default function HeroSection() {
           <div className="relative w-full max-w-lg aspect-square">
             {/* Background glow */}
             <div className="absolute inset-10 bg-gh-blue/10 rounded-full blur-[80px] -z-10"></div>
+            
             {/* Center Terminal */}
             <div
-              className="absolute top-1/2 left-1/2 w-32 h-32 bg-gh-card-bg border border-gh-border rounded-2xl shadow-2xl flex items-center justify-center z-20"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 z-20"
               style={{ animation: "float 6s ease-in-out infinite" }}
             >
-              <span className="material-symbols-outlined text-6xl text-gh-blue">terminal</span>
+              <GlowCard glowColor="blue" customSize={true} radius={24} outerGlow={false} className="w-full h-full flex items-center justify-center !rounded-2xl">
+                <span className="material-symbols-outlined text-6xl text-gh-blue">terminal</span>
+              </GlowCard>
             </div>
-            {/* Top right AI spark */}
+            
+            {/* Top right MD File */}
             <div
-              className="absolute top-[20%] right-[15%] w-24 h-24 bg-gh-fade border border-gh-border rounded-xl shadow-xl flex items-center justify-center z-10"
+              className="absolute top-[15%] right-[15%] w-24 h-24 z-10"
               style={{ animation: "float-simple 5s ease-in-out infinite 1s" }}
             >
-              <span className="material-symbols-outlined text-4xl text-[#bf87ff]">
-                auto_awesome
-              </span>
+              <GlowCard glowColor="purple" customSize={true} radius={16} outerGlow={false} className="w-full h-full flex items-center justify-center !rounded-xl">
+                <span className="material-symbols-outlined text-4xl text-[#bf87ff]">markdown</span>
+              </GlowCard>
             </div>
-            {/* Bottom left Code */}
+            
+            {/* Bottom left Git Branch */}
             <div
-              className="absolute bottom-[20%] left-[15%] w-28 h-28 bg-gh-fade border border-gh-border rounded-xl shadow-xl flex items-center justify-center z-10"
+              className="absolute bottom-[15%] left-[15%] w-28 h-28 z-10"
               style={{ animation: "float-simple 7s ease-in-out infinite 2s" }}
             >
-              <span className="material-symbols-outlined text-5xl text-gh-green">
-                code_blocks
-              </span>
+              <GlowCard glowColor="green" customSize={true} radius={16} outerGlow={false} className="w-full h-full flex items-center justify-center !rounded-xl">
+                <span className="material-symbols-outlined text-5xl text-gh-green">account_tree</span>
+              </GlowCard>
             </div>
-            {/* Small elements */}
+            
+            {/* Small elements: Git Issue */}
             <div
-              className="absolute top-[35%] left-[10%] w-14 h-14 bg-gh-header border border-gh-border rounded-full shadow-lg flex items-center justify-center z-0"
+              className="absolute top-[35%] left-[5%] w-14 h-14 z-0"
               style={{ animation: "float-simple 4s ease-in-out infinite 0.5s" }}
             >
-              <span className="material-symbols-outlined text-2xl text-gh-text-secondary">
-                rule
-              </span>
+              <GlowCard glowColor="orange" customSize={true} radius={50} outerGlow={false} className="w-full h-full flex items-center justify-center !rounded-full">
+                <span className="material-symbols-outlined text-2xl text-orange-400">adjust</span>
+              </GlowCard>
             </div>
+            
+            {/* Small elements: Pull Request Merge */}
             <div
-              className="absolute bottom-[30%] right-[10%] w-16 h-16 bg-gh-header border border-gh-border rounded-lg shadow-lg flex items-center justify-center z-0"
+              className="absolute bottom-[35%] right-[5%] w-16 h-16 z-0"
               style={{ animation: "float-simple 8s ease-in-out infinite 1.5s" }}
             >
-              <span className="material-symbols-outlined text-3xl text-gh-text-secondary">
-                commit
-              </span>
+              <GlowCard glowColor="blue" customSize={true} radius={12} outerGlow={false} className="w-full h-full flex items-center justify-center !rounded-lg">
+                <span className="material-symbols-outlined text-3xl text-[#58a6ff]">call_merge</span>
+              </GlowCard>
             </div>
           </div>
         </motion.div>
