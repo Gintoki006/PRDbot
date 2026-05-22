@@ -36,13 +36,13 @@ export default function TopNavBar() {
     >
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-4">
-          <a
+          <Link
             className="flex items-center gap-2 font-semibold text-white hover:text-gh-text-secondary transition-colors"
-            href="#"
+            href="/"
           >
             <span className="material-symbols-outlined text-3xl">terminal</span>
             <span className="text-xl tracking-tight">PRDbot</span>
-          </a>
+          </Link>
           <div className="hidden md:flex gap-4 ml-4">
             <a
               className="text-white font-semibold text-sm hover:text-gh-text-secondary py-2 px-1"
@@ -71,19 +71,7 @@ export default function TopNavBar() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center bg-[#010409] border border-gh-border rounded-md px-3 py-1 gap-2">
-            <span className="material-symbols-outlined text-gh-text-secondary text-sm">
-              search
-            </span>
-            <input
-              className="bg-transparent border-none focus:ring-0 text-sm w-44 text-gh-text-main placeholder-gh-text-secondary outline-none"
-              placeholder="Search or jump to..."
-              type="text"
-            />
-            <span className="text-xs border border-gh-border px-1.5 rounded text-gh-text-secondary">
-              /
-            </span>
-          </div>
+
           {isLoaded && !isSignedIn && (
             <>
               <Link href="/sign-in" className="gh-btn-secondary px-3 py-1.5 text-sm font-semibold rounded-md flex items-center gap-1.5 cursor-pointer">
