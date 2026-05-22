@@ -67,7 +67,7 @@ export default function HeroSection() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 z-20"
               style={{ animation: "float 6s ease-in-out infinite" }}
             >
-              <GlowCard glowColor="blue" customSize={true} radius={24} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center !rounded-2xl">
+              <GlowCard glowColor="blue" customSize={true} radius={24} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-6xl text-gh-blue">terminal</span>
               </GlowCard>
             </div>
@@ -77,7 +77,7 @@ export default function HeroSection() {
               className="absolute top-[15%] right-[15%] w-24 h-24 z-10"
               style={{ animation: "float-simple 5s ease-in-out infinite 1s" }}
             >
-              <GlowCard glowColor="purple" customSize={true} radius={16} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center !rounded-xl">
+              <GlowCard glowColor="purple" customSize={true} radius={16} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-4xl text-[#bf87ff]">markdown</span>
               </GlowCard>
             </div>
@@ -87,7 +87,7 @@ export default function HeroSection() {
               className="absolute bottom-[15%] left-[15%] w-28 h-28 z-10"
               style={{ animation: "float-simple 7s ease-in-out infinite 2s" }}
             >
-              <GlowCard glowColor="green" customSize={true} radius={16} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center !rounded-xl">
+              <GlowCard glowColor="green" customSize={true} radius={16} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-5xl text-gh-green">account_tree</span>
               </GlowCard>
             </div>
@@ -97,7 +97,7 @@ export default function HeroSection() {
               className="absolute top-[35%] left-[5%] w-14 h-14 z-0"
               style={{ animation: "float-simple 4s ease-in-out infinite 0.5s" }}
             >
-              <GlowCard glowColor="orange" customSize={true} radius={50} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center !rounded-full">
+              <GlowCard glowColor="orange" customSize={true} radius={50} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl text-orange-400">adjust</span>
               </GlowCard>
             </div>
@@ -107,7 +107,7 @@ export default function HeroSection() {
               className="absolute bottom-[35%] right-[5%] w-16 h-16 z-0"
               style={{ animation: "float-simple 8s ease-in-out infinite 1.5s" }}
             >
-              <GlowCard glowColor="blue" customSize={true} radius={12} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center !rounded-lg">
+              <GlowCard glowColor="blue" customSize={true} radius={12} outerGlow={false} trackingMode="relative" className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-3xl text-[#58a6ff]">call_merge</span>
               </GlowCard>
             </div>

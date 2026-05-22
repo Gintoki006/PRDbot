@@ -86,6 +86,7 @@ export const GlowCard = ({
       backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
       backgroundPosition: '50% 50%',
       border: 'var(--border-size) solid var(--backup-border)',
+      borderRadius: 'calc(var(--radius) * 1px)',
       position: 'relative',
       touchAction: 'none',
     };
