@@ -1,8 +1,5 @@
-// PRDbot — Prisma Schema
-// Docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "library"
 }
 
@@ -16,54 +13,45 @@ model Repository {
   repoFullName String   @unique
   webhookId    Int?
   createdAt    DateTime @default(now())
-
-  prd Prd?
+  prd          Prd?
 }
 
 model Prd {
-  id           String   @id @default(uuid())
+  id           String     @id @default(uuid())
   userId       String
-  repoFullName String   @unique
+  repoFullName String     @unique
   prdText      String
-  ruleCount    Int      @default(0)
-  prdMeta      Json     @default("{}")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  repository Repository @relation(fields: [repoFullName], references: [repoFullName], onDelete: Cascade)
+  ruleCount    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  prdMeta      Json       @default("{}")
+  repository   Repository @relation(fields: [repoFullName], references: [repoFullName], onDelete: Cascade)
 }
 
 model AgentAction {
-  id             String   @id @default(uuid())
-  repoFullName   String
-  issueNumber    Int
-  issueTitle     String   @default("")
-  toolCalled     String   @default("none")
-  ruleQuoted     String   @default("")
-  confidence     Int      @default(0)
-  result         String   @default("")
-  iterationCount Int      @default(0)
-  status         String   @default("compliant")
-  simulated      Boolean  @default(false)
-  
-  // Pass 1: Drift Detection
-  driftStatus       String   @default("compliant")
-  driftScore        Int      @default(0)
-  driftType         String   @default("none")
-  driftReason       String   @default("")
-  driftSuggestedAlt String   @default("")
-
-  // Pass 2: AI Issue Review
-  aiReviewStatus    String   @default("compliant")
-  alignmentScore    Int      @default(0)
-  aiFindings        Json     @default("[]")
-  aiMissing         Json     @default("[]")
-
-  // Pass 3: Rule Enforcement
-  ruleEnforcementStatus String @default("compliant")
-  suggestedRewrite  String   @default("")
-
-  createdAt      DateTime @default(now())
+  id                    String   @id @default(uuid())
+  repoFullName          String
+  issueNumber           Int
+  issueTitle            String   @default("")
+  toolCalled            String   @default("none")
+  ruleQuoted            String   @default("")
+  confidence            Int      @default(0)
+  result                String   @default("")
+  iterationCount        Int      @default(0)
+  status                String   @default("compliant")
+  simulated             Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  aiFindings            Json     @default("[]")
+  aiMissing             Json     @default("[]")
+  aiReviewStatus        String   @default("compliant")
+  alignmentScore        Int      @default(0)
+  driftReason           String   @default("")
+  driftScore            Int      @default(0)
+  driftStatus           String   @default("compliant")
+  driftSuggestedAlt     String   @default("")
+  driftType             String   @default("none")
+  ruleEnforcementStatus String   @default("compliant")
+  suggestedRewrite      String   @default("")
 
   @@index([repoFullName])
 }

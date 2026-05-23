@@ -5,20 +5,7 @@ import { extractPrdMeta } from "../../../lib/agent/extractPrdMeta";
 
 export const runtime = "nodejs";
 
-// Basic heuristic for counting rules: matches lists starting with -, *, or digits (1., 1)
-function countRules(text) {
-  if (!text) return 0;
-  const lines = text.split("\n");
-  let count = 0;
-  const ruleRegex = /^\s*[-*\d]\.?\s+/;
-  
-  for (const line of lines) {
-    if (ruleRegex.test(line)) {
-      count++;
-    }
-  }
-  return count;
-}
+import { countRules } from "../../../lib/countRules";
 
 export async function GET(req) {
   try {

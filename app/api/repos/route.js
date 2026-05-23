@@ -2,6 +2,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { createOctokit } from "../../../lib/octokit";
+import { countRules } from "../../../lib/countRules";
 
 export const runtime = "nodejs";
 
@@ -58,6 +59,7 @@ export async function POST(req) {
       return new NextResponse("Repository already connected", { status: 400 });
     }
 
+    let octokit;
     try {
       // Get GitHub token from Clerk
       const client = await clerkClient();
@@ -73,7 +75,7 @@ export async function POST(req) {
       }
 
       // Verify access to the repository
-      const octokit = createOctokit(token);
+      octokit = createOctokit(token);
       await octokit.repos.get({
         owner,
         repo,
@@ -84,11 +86,46 @@ export async function POST(req) {
       return new NextResponse("Cannot access repository. Ensure it exists and you have access to it.", { status: 404 });
     }
 
+    // Try to auto-fetch PRD
+    let prdText = null;
+    const prdPaths = ["prd.md", "PRD.md"];
+    
+    for (const path of prdPaths) {
+      try {
+        const { data } = await octokit.repos.getContent({
+          owner,
+          repo,
+          path,
+        });
+        
+        if (data && data.content) {
+          prdText = Buffer.from(data.content, "base64").toString("utf-8");
+          console.log(`[PRD_FETCH] Successfully fetched ${path} for ${repoFullName}`);
+          break; // Stop looking once we find one
+        }
+      } catch (err) {
+        // File not found at this path, continue to the next one
+      }
+    }
+
+    if (!prdText) {
+      console.log(`[PRD_FETCH] No PRD file found for ${repoFullName}`);
+    }
+
     // Create repository record
     const repository = await prisma.repository.create({
       data: {
         userId,
         repoFullName,
+        ...(prdText ? {
+          prd: {
+            create: {
+              userId,
+              prdText,
+              ruleCount: countRules(prdText)
+            }
+          }
+        } : {})
       },
       include: {
         prd: true,
