@@ -6,7 +6,7 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, o
   const toast = useToast();
   const [isRemoving, setIsRemoving] = useState(false);
   const hasPrd = !!repo.prd;
-  
+
   const prdSource = repo.prd?.source || "manual";
   const glowColor = hasPrd ? (prdSource === "auto_generated" ? "purple" : "green") : "blue";
   const borderColor = hasPrd ? (prdSource === "auto_generated" ? "rgba(191, 135, 255, 0.25)" : "rgba(35, 134, 54, 0.25)") : "rgba(56, 139, 253, 0.15)";
@@ -57,7 +57,7 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, o
             </p>
           </div>
         </div>
-        
+
         <button
           onClick={handleRemove}
           disabled={isRemoving}
@@ -71,11 +71,10 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, o
       <div className="flex-1 relative z-10">
         <div className="flex items-center gap-2 mb-4">
           {hasPrd ? (
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium animate-fade-in ${
-              prdSource === "auto_generated"
-                ? "border-purple-500/30 bg-purple-500/10 text-purple-300"
-                : "border-gh-green/30 bg-gh-green/10 text-gh-green"
-            }`}>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium animate-fade-in ${prdSource === "auto_generated"
+              ? "border-purple-500/30 bg-purple-500/10 text-purple-300"
+              : "border-gh-green/30 bg-gh-green/10 text-gh-green"
+              }`}>
               <span className="material-symbols-outlined text-[14px]">
                 {prdSource === "auto_generated" ? "auto_awesome" : "check_circle"}
               </span>
@@ -87,33 +86,30 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, o
               No PRD
             </div>
           )}
+
+          {hasPrd && (
+            <span className="text-xs text-gh-text-secondary">
+              {repo.prd.ruleCount} rules
+            </span>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col gap-2 mt-auto pt-4 border-t border-gh-border relative z-10">
         {hasPrd ? (
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex gap-2 w-full">
-              <button
-                onClick={() => onUploadPrd(repo)}
-                className="flex-1 bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[16px]">edit_document</span>
-                Update PRD
-              </button>
-              <button
-                onClick={() => onSimulate?.(repo)}
-                className="flex-none bg-gh-blue/10 hover:bg-gh-blue/20 text-gh-blue border border-gh-blue/30 p-1.5 rounded-lg transition-colors cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[20px] block">play_arrow</span>
-              </button>
-            </div>
+          <div className="flex gap-2 w-full">
             <button
-              onClick={() => onGeneratePrd?.(repo)}
-              className="w-full bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              onClick={() => onUploadPrd(repo)}
+              className="flex-1 bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">sparkles</span>
-              Generate PRD from Repo ✨
+              <span className="material-symbols-outlined text-[16px]">edit_document</span>
+              Update PRD
+            </button>
+            <button
+              onClick={() => onSimulate?.(repo)}
+              className="flex-none bg-gh-blue/10 hover:bg-gh-blue/20 text-gh-blue border border-gh-blue/30 p-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[20px] block">play_arrow</span>
             </button>
           </div>
         ) : (
@@ -127,10 +123,9 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, o
             </button>
             <button
               onClick={() => onGeneratePrd?.(repo)}
-              className="w-full bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">sparkles</span>
-              Generate PRD from Repo ✨
+              Generate PRD from Repo
             </button>
           </div>
         )}
