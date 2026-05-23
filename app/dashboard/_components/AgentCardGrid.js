@@ -28,6 +28,14 @@ export default function AgentCardGrid({ action }) {
     return "compliant";
   };
 
+  // Map code agent status to card status
+  const mapCodeAgentStatus = (status) => {
+    if (status === "pr_opened") return "compliant";
+    if (status === "generating") return "warning";
+    if (status === "error") return "error";
+    return "default";
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -70,6 +78,19 @@ export default function AgentCardGrid({ action }) {
         title="Verdict"
         status={mapVerdictStatus(action.status)}
         finding={action.result || 'Evaluation complete.'}
+      />
+      <AgentCard
+        icon="code"
+        title="Code Agent"
+        status={mapCodeAgentStatus(action.codeAgentStatus)}
+        finding={
+          action.prUrl
+            ? action.prUrl
+            : action.codeAgentStatus === 'generating'
+            ? 'Generating code changes...'
+            : 'Waiting for compliant issue.'
+        }
+        prUrl={action.prUrl}
       />
     </motion.div>
   );

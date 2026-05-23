@@ -52,6 +52,8 @@ model AgentAction {
   driftType             String   @default("none")
   ruleEnforcementStatus String   @default("compliant")
   suggestedRewrite      String   @default("")
+  codeAgentStatus       String   @default("idle")
+  prUrl                 String?
 
   @@index([repoFullName])
 }

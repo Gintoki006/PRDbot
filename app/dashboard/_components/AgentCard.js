@@ -29,7 +29,7 @@ const statusConfig = {
   }
 };
 
-export default function AgentCard({ icon, title, status, score, finding }) {
+export default function AgentCard({ icon, title, status, score, finding, prUrl }) {
   const config = statusConfig[status?.toLowerCase()] || statusConfig.default;
 
   return (
@@ -53,9 +53,20 @@ export default function AgentCard({ icon, title, status, score, finding }) {
             {score}<span className="text-sm opacity-70 font-normal">/100</span>
           </div>
         )}
-        <p className="text-sm opacity-90 line-clamp-2 leading-relaxed">
-          {finding}
-        </p>
+        {prUrl ? (
+          <a
+            href={prUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm underline hover:opacity-80 transition-opacity break-all leading-relaxed"
+          >
+            View Pull Request →
+          </a>
+        ) : (
+          <p className="text-sm opacity-90 line-clamp-2 leading-relaxed">
+            {finding}
+          </p>
+        )}
       </div>
     </motion.div>
   );

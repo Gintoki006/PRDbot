@@ -65,6 +65,13 @@ const TYPE_STYLES = {
     icon: "gavel",
     label: "Verdict",
   },
+  code_agent: {
+    bg: "bg-pink-500/10",
+    border: "border-pink-500/30",
+    text: "text-pink-400",
+    icon: "code",
+    label: "Code Agent",
+  },
 };
 
 export default function AgentLogPanel({ repoFullName, isOpen, onClose }) {
@@ -192,6 +199,16 @@ export default function AgentLogPanel({ repoFullName, isOpen, onClose }) {
                                 {style.label && <span className="font-semibold opacity-90 mr-1.5">[{style.label}]</span>}
                                 {log.message}
                               </p>
+                              {log.prUrl && (
+                                <a
+                                  href={log.prUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${style.border} ${style.text} ${style.bg} hover:opacity-80 transition-opacity underline`}
+                                >
+                                  View PR →
+                                </a>
+                              )}
                               {log.score !== undefined && (
                                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${style.border} ${style.text} ${style.bg}`}>
                                   {log.score}/100
