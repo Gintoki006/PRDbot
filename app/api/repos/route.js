@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { createOctokit } from "../../../lib/octokit";
 import { countRules } from "../../../lib/countRules";
+import { extractPrdMeta } from "../../../lib/agent/extractPrdMeta";
 
 export const runtime = "nodejs";
 
@@ -112,6 +113,16 @@ export async function POST(req) {
       console.log(`[PRD_FETCH] No PRD file found for ${repoFullName}`);
     }
 
+    let prdMeta = {};
+    if (prdText) {
+      try {
+        prdMeta = await extractPrdMeta(prdText);
+        console.log("[PRD_META]", prdMeta);
+      } catch (metaError) {
+        console.error("[PRD_META_ERROR] Failed to extract PRD meta.", metaError);
+      }
+    }
+
     // Create repository record
     const repository = await prisma.repository.create({
       data: {
@@ -122,7 +133,8 @@ export async function POST(req) {
             create: {
               userId,
               prdText,
-              ruleCount: countRules(prdText)
+              ruleCount: countRules(prdText),
+              prdMeta: prdMeta,
             }
           }
         } : {})
