@@ -46,7 +46,7 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { repoFullName, prdText } = body;
+    const { repoFullName, prdText, prdMeta: providedPrdMeta, source = "manual", autoGenMeta = null, needsReview = false } = body;
 
     if (!repoFullName || typeof prdText !== "string") {
       return new NextResponse("Missing required fields", { status: 400 });
@@ -64,12 +64,14 @@ export async function POST(req) {
     }
 
     const ruleCount = countRules(prdText);
-    let prdMeta = {};
-    try {
-      prdMeta = await extractPrdMeta(prdText);
-      console.log("[PRD_META]", prdMeta);
-    } catch (metaError) {
-      console.error("[PRD_META_ERROR] Failed to extract PRD meta, saving empty meta.", metaError);
+    let prdMeta = providedPrdMeta || {};
+    if (!providedPrdMeta) {
+      try {
+        prdMeta = await extractPrdMeta(prdText);
+        console.log("[PRD_META]", prdMeta);
+      } catch (metaError) {
+        console.error("[PRD_META_ERROR] Failed to extract PRD meta, saving empty meta.", metaError);
+      }
     }
 
     // Upsert the PRD
@@ -81,6 +83,9 @@ export async function POST(req) {
         prdText,
         ruleCount,
         prdMeta,
+        source,
+        autoGenMeta,
+        needsReview,
       },
       create: {
         userId,
@@ -88,6 +93,9 @@ export async function POST(req) {
         prdText,
         ruleCount,
         prdMeta,
+        source,
+        autoGenMeta,
+        needsReview,
       },
     });
 

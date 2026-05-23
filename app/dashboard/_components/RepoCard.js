@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useToast } from "./Toast";
 
-export default function RepoCard({ repo, onRemove, onUploadPrd, onSimulate }) {
+export default function RepoCard({ repo, onRemove, onUploadPrd, onGeneratePrd, onSimulate }) {
   const toast = useToast();
   const [isRemoving, setIsRemoving] = useState(false);
   const hasPrd = !!repo.prd;
@@ -59,9 +59,9 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onSimulate }) {
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-4">
           {hasPrd ? (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gh-green/30 bg-gh-green/10 text-gh-green text-xs font-medium">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gh-green/30 bg-gh-green/10 text-gh-green text-xs font-medium animate-fade-in">
               <span className="material-symbols-outlined text-[14px]">check_circle</span>
-              PRD Active
+              PRD Active{repo.prd.source === "auto_generated" ? " — Auto-Generated" : ""}
             </div>
           ) : (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-500 text-xs font-medium">
@@ -78,25 +78,41 @@ export default function RepoCard({ repo, onRemove, onUploadPrd, onSimulate }) {
         </div>
       </div>
 
-      <div className="flex gap-2 mt-auto pt-4 border-t border-gh-border">
-        <button
-          onClick={() => onUploadPrd(repo)}
-          className="flex-1 bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
-        >
-          <span className="material-symbols-outlined text-[16px]">
-            {hasPrd ? "edit_document" : "upload_file"}
-          </span>
-          {hasPrd ? "Update PRD" : "Upload PRD"}
-        </button>
-        
-        <button
-          onClick={() => onSimulate?.(repo)}
-          disabled={!hasPrd}
-          title={!hasPrd ? "Upload PRD first" : "Run simulation"}
-          className="flex-none bg-gh-blue/10 hover:bg-gh-blue/20 text-gh-blue border border-gh-blue/30 p-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:hover:bg-gh-blue/10"
-        >
-          <span className="material-symbols-outlined text-[20px] block">play_arrow</span>
-        </button>
+      <div className="flex flex-col gap-2 mt-auto pt-4 border-t border-gh-border">
+        {hasPrd ? (
+          <div className="flex gap-2 w-full">
+            <button
+              onClick={() => onUploadPrd(repo)}
+              className="flex-1 bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[16px]">edit_document</span>
+              Update PRD
+            </button>
+            <button
+              onClick={() => onSimulate?.(repo)}
+              className="flex-none bg-gh-blue/10 hover:bg-gh-blue/20 text-gh-blue border border-gh-blue/30 p-1.5 rounded-lg transition-colors"
+            >
+              <span className="material-symbols-outlined text-[20px] block">play_arrow</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2 w-full">
+            <button
+              onClick={() => onUploadPrd(repo)}
+              className="w-full bg-surface-variant hover:bg-gh-border text-white border border-gh-border py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[16px]">upload_file</span>
+              Paste PRD manually
+            </button>
+            <button
+              onClick={() => onGeneratePrd?.(repo)}
+              className="w-full bg-gh-blue/20 hover:bg-gh-blue/30 text-white border border-gh-blue/40 py-1.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[16px] text-gh-blue">sparkles</span>
+              Generate PRD from Repo ✨
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

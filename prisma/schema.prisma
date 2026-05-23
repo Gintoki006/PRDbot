@@ -22,9 +22,12 @@ model Prd {
   repoFullName String     @unique
   prdText      String
   ruleCount    Int        @default(0)
+  prdMeta      Json       @default(dbgenerated("'{}'"))
+  source       String     @default("manual")
+  autoGenMeta  Json?
+  needsReview  Boolean    @default(false)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  prdMeta      Json       @default("{}")
   repository   Repository @relation(fields: [repoFullName], references: [repoFullName], onDelete: Cascade)
 }
 

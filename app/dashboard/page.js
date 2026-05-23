@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import AddRepoModal from "./_components/AddRepoModal";
 import RepoCard from "./_components/RepoCard";
 import PrdUploadModal from "./_components/PrdUploadModal";
+import PrdGeneratorModal from "./_components/PrdGeneratorModal";
 import SimulatePanel from "./_components/SimulatePanel";
 import AgentLogPanel from "./_components/AgentLogPanel";
 import AgentCardGrid from "./_components/AgentCardGrid";
@@ -29,6 +30,8 @@ export default function DashboardPage() {
   const [isAddRepoOpen, setIsAddRepoOpen] = useState(false);
   const [isPrdModalOpen, setIsPrdModalOpen] = useState(false);
   const [selectedRepoForPrd, setSelectedRepoForPrd] = useState(null);
+  const [isPrdGenOpen, setIsPrdGenOpen] = useState(false);
+  const [selectedRepoForGen, setSelectedRepoForGen] = useState(null);
 
   // Simulate state
   const [isSimulateOpen, setIsSimulateOpen] = useState(false);
@@ -151,6 +154,10 @@ export default function DashboardPage() {
                       setSelectedRepoForPrd(r);
                       setIsPrdModalOpen(true);
                     }}
+                    onGeneratePrd={(r) => {
+                      setSelectedRepoForGen(r);
+                      setIsPrdGenOpen(true);
+                    }}
                     onSimulate={(r) => {
                       setSelectedRepoForSim(r);
                       setIsSimulateOpen(true);
@@ -199,6 +206,16 @@ export default function DashboardPage() {
           setSelectedRepoForPrd(null);
         }}
         repo={selectedRepoForPrd}
+        onSuccess={fetchRepos}
+      />
+
+      <PrdGeneratorModal
+        isOpen={isPrdGenOpen}
+        onClose={() => {
+          setIsPrdGenOpen(false);
+          setSelectedRepoForGen(null);
+        }}
+        repo={selectedRepoForGen}
         onSuccess={fetchRepos}
       />
 

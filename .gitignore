@@ -41,3 +41,5 @@ todolist.md
 prd.md
 techstack.md
 design.md
+# clerk configuration (can include secrets)
+/.clerk/
