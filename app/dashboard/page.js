@@ -82,21 +82,27 @@ export default function DashboardPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="p-4 md:p-8 max-w-[1440px] mx-auto h-full flex flex-col"
+      className="p-4 md:p-8 max-w-[1440px] mx-auto h-full flex flex-col relative"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      {/* Background Tech Glows */}
+      <div className="absolute top-[8%] left-[10%] w-96 h-96 bg-gh-blue/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 relative z-10">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Repositories</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+            Connected <span className="text-transparent bg-clip-text bg-gradient-to-r from-gh-blue to-[#bf87ff]">Repositories</span>
+          </h1>
           <p className="text-sm text-gh-text-secondary mt-1">
-            Manage your connected GitHub repositories and their PRD rules.
+            Manage your connected GitHub repositories and their active requirements.
           </p>
         </div>
         
         <button
           onClick={() => setIsAddRepoOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gh-green hover:bg-gh-green-hover rounded-lg transition-colors border border-white/10"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-gh-blue to-[#bf87ff] hover:brightness-110 active:scale-95 hover:shadow-lg hover:shadow-gh-blue/15 rounded-lg transition-all border border-white/10 cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[18px]">add</span>
+          <span className="material-symbols-outlined text-[18px] font-bold">add</span>
           Connect Repository
         </button>
       </div>

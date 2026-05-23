@@ -26,7 +26,8 @@ export const GlowCard = ({
   customSize = false,
   radius = 24,
   outerGlow = true,
-  trackingMode = 'fixed' // 'fixed' or 'relative'
+  trackingMode = 'fixed', // 'fixed' or 'relative'
+  style = {}
 }) => {
   const cardRef = useRef(null);
   const innerRef = useRef(null);
@@ -102,7 +103,7 @@ export const GlowCard = ({
       baseStyles.height = typeof height === 'number' ? `${height}px` : height;
     }
 
-    return baseStyles;
+    return { ...baseStyles, ...style };
   };
 
   const beforeAfterStyles = `
