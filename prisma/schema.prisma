@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Repository {
-  id           String   @id @default(uuid())
-  userId       String
-  repoFullName String   @unique
-  webhookId    Int?
-  createdAt    DateTime @default(now())
-  prd          Prd?
+  id                        String   @id @default(uuid())
+  userId                    String
+  repoFullName              String   @unique
+  webhookId                 Int?
+  createdAt                 DateTime @default(now())
+  autoImplementationEnabled Boolean  @default(false)
+  prd                       Prd?
 }
 
 model Prd {
@@ -25,35 +26,43 @@ model Prd {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   prdMeta      Json       @default("{}")
+  autoGenMeta  Json?
+  needsReview  Boolean    @default(false)
+  source       String     @default("manual")
   repository   Repository @relation(fields: [repoFullName], references: [repoFullName], onDelete: Cascade)
 }
 
 model AgentAction {
-  id                    String   @id @default(uuid())
-  repoFullName          String
-  issueNumber           Int
-  issueTitle            String   @default("")
-  toolCalled            String   @default("none")
-  ruleQuoted            String   @default("")
-  confidence            Int      @default(0)
-  result                String   @default("")
-  iterationCount        Int      @default(0)
-  status                String   @default("compliant")
-  simulated             Boolean  @default(false)
-  createdAt             DateTime @default(now())
-  aiFindings            Json     @default("[]")
-  aiMissing             Json     @default("[]")
-  aiReviewStatus        String   @default("compliant")
-  alignmentScore        Int      @default(0)
-  driftReason           String   @default("")
-  driftScore            Int      @default(0)
-  driftStatus           String   @default("compliant")
-  driftSuggestedAlt     String   @default("")
-  driftType             String   @default("none")
-  ruleEnforcementStatus String   @default("compliant")
-  suggestedRewrite      String   @default("")
-  codeAgentStatus       String   @default("idle")
-  prUrl                 String?
+  id                       String   @id @default(uuid())
+  repoFullName             String
+  issueNumber              Int
+  issueTitle               String   @default("")
+  toolCalled               String   @default("none")
+  ruleQuoted               String   @default("")
+  confidence               Int      @default(0)
+  result                   String   @default("")
+  iterationCount           Int      @default(0)
+  status                   String   @default("compliant")
+  simulated                Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  aiFindings               Json     @default("[]")
+  aiMissing                Json     @default("[]")
+  aiReviewStatus           String   @default("compliant")
+  alignmentScore           Int      @default(0)
+  driftReason              String   @default("")
+  driftScore               Int      @default(0)
+  driftStatus              String   @default("compliant")
+  driftSuggestedAlt        String   @default("")
+  driftType                String   @default("none")
+  ruleEnforcementStatus    String   @default("compliant")
+  suggestedRewrite         String   @default("")
+  branchName               String?
+  codeAgentError           String?
+  codeAgentStatus          String   @default("skipped")
+  filesChanged             Json?
+  implementationComplexity String?
+  prNumber                 Int?
+  prUrl                    String?
 
   @@index([repoFullName])
 }
